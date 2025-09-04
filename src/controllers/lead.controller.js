@@ -134,7 +134,7 @@ export const deleteLead = async (req, res) => {
     if(!leadId){
       return res.status(400).json({ message: "Lead ID is required" });
     }
-    const lead = await Lead.findByIdAndDelete();
+    const lead = await Lead.findByIdAndDelete(leadId);
     if (!lead) {
       return res.status(404).json({ message: "Lead not found" });
     }
