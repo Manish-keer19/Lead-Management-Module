@@ -27,6 +27,11 @@ export const createLead = async (req, res) => {
 export const getLeads = async (req, res) => {
   try {
     const leads = await Lead.find().sort({ createdAt: -1 });
+    if (!leads || leads.length === 0) {
+  return res.status(404).json({ message: "No leads found" });
+}
+
+    console.log("leads",leads)
     res.status(200).json(leads);
   } catch (error) {
     console.error("Error fetching leads:", error);
