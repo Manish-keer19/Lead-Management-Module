@@ -4,7 +4,7 @@ import { Lead } from "../models/lead.model.js"
 export const createLead = async (req, res) => {
     try {
         const { name, email, phone, status } = req.body;
-        if (!name || !email || !phone) {
+        if (!name || !email || !phone || !status) {
             return res.status(400).json({ message: "Name, email and phone number are required" });
         }
 
@@ -45,7 +45,11 @@ export const getLeads = async (req, res) => {
 // Get single lead by ID
 export const getLeadById = async (req, res) => {
   try {
-    const lead = await Lead.findById(req.params.id);
+    const leadId = req.params.id;
+    if (!leadId) {
+      return res.status(400).json({ message: "Lead ID is required" });
+    }
+    const lead = await Lead.findById(leadId);
     if (!lead) {
       return res.status(404).json({ message: "Lead not found" });
     }
@@ -62,7 +66,20 @@ export const getLeadById = async (req, res) => {
 // Update lead details name, email, phone,all
 export const updateLead = async (req, res) => {
   try {
-    const lead = await Lead.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { name, email, phone,status }= req.body;
+
+    const leadId = req.params.id;
+
+    if(!leadId){
+      return res.status(400).json({ message: "Lead ID is required" });
+    }
+
+  if(!name || !email || !phone || !status){
+    return res.status(400).json({ message: "Name, email and phone number are required" });
+  }
+
+
+    const lead = await Lead.findByIdAndUpdate(leadId,{$set:{name,email,phone,status}}, { new: true });
     if (!lead) {
       return res.status(404).json({ message: "Lead not found" });
     }
@@ -86,8 +103,14 @@ export const updateLeadStatus = async (req, res) => {
       return res.status(400).json({ message: "Status is required" });
     }
 
+
+    const leadId  = req.params.id;
+if(!leadId){
+  return res.status(400).json({ message: "Lead ID is required" });
+}
+
     const lead = await Lead.findByIdAndUpdate(
-      req.params.id,
+      leadId,
       { status },
       { new: true }
     );
@@ -106,7 +129,12 @@ export const updateLeadStatus = async (req, res) => {
 // Delete a lead
 export const deleteLead = async (req, res) => {
   try {
-    const lead = await Lead.findByIdAndDelete(req.params.id);
+
+    const leadId = req.params.id;
+    if(!leadId){
+      return res.status(400).json({ message: "Lead ID is required" });
+    }
+    const lead = await Lead.findByIdAndDelete();
     if (!lead) {
       return res.status(404).json({ message: "Lead not found" });
     }

@@ -9,7 +9,7 @@ app.use(express.json())
 app.use("/api/v1/leads",leadroute)
 
 app.get("/", (req, res) => {
-    res.send("Hello World")
+    res.send("Welcom to the manish's Lead managment Module ")
 })
 
 
